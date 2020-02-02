@@ -1,0 +1,52 @@
+[environment]
+n = 4 # number of bodies in the simulation
+dt = 0.1 # s
+t_max = 100.0 # s
+method = "HPC"
+
+[const]
+G = 10 # Universal gravitation constant use for random init
+
+[HPC]
+epsilon = 1e-11 # tolerance for the error.
+max_steps = 100 # maximum number of allowed iterations before ceasing.
+
+[RK]
+    order = 4
+    # Runge-Kutta Numerical Integration constants
+    # In the Orbital Simulator, A is included, yet not used.
+    [RK.A]
+    1 = [[0]]
+    2 = [[0], [1]]
+    3 = [[0], [0.5], [1]]
+    4 = [[0], [0.5], [0.5], [1]]
+
+    [RK.B]
+    1 = [[0]]
+    2 = [[0], [1]]
+    3 = [[0, 0], [0.5, 0.0], [-1, 2]]
+    4 = [[0, 0, 0], [0.5, 0.0, 0.0], [0.0, 0.5, 0.0], [0, 0, 1]]
+
+    [RK.C]
+    1 = [[1]]
+    2 = [[0.5], [0.5]]
+    3 = [[0.16667], [0.66667], [0.16667]]
+    4 = [[0.16667], [0.33333], [0.33333], [0.16667]]
+
+# Configurations which specify initial starting positions,
+# velocities, masses and the gravitational constant used.
+[configs]
+    [configs.df1]
+    # Description:
+    file = "config1.csv"
+    G = 20.0
+
+    [configs.df2]
+    # Description:
+    file = "config2.csv"
+    G = 24.0
+
+    [configs.mep]
+    # Description:
+    file = "blepmep.csv"
+    G = 45.0
