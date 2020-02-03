@@ -8,12 +8,19 @@ from mpl_toolkits import mplot3d
 
 
 class Environment:
-    def __init__(self, settings_file="configuration/settings.toml"):
-        """ TODO
-        """
+    def __init__(self, config=None, config_id=None,
+            settings_file="configuration/settings.toml"):
+        self.config = config
+        self.config_id = config_id
         self.settings = toml.load(settings_file)
         self.dt = self.settings["environment"]["dt"]
-        self.N = self.settings["environment"]["n"]
+
+        if self.config is not None:
+            self.N = self.config.shape[0]
+            self.G = self.settings['configs'][self.config_id]['G']
+        else:
+            self.N = self.settings['environment']['n']
+            self.G = self.settings['environment']['G']
 
         # Placeholders
         self.names = np.empty(self.N)
@@ -24,10 +31,17 @@ class Environment:
         
     def _reset(self):
         """ Resets the environment back to default positions. """
-        self.m = np.random.uniform(0, 10, (self.N, 1))
-        self.positions = np.random.uniform(-100, 100, (self.N, 3))
-        self.velocities = np.random.uniform(-1, 1, (self.N, 3))
-        self.accelerations = np.zeros((self.N, 2))
+        # Positions defined by a configuration. Overrides the default values.
+        if self.config is not None:
+            self.m = np.array(self.config['mass'])
+            self.positions = np.array(self.config[['x', 'y', 'z']])
+            self.velocities = np.array(self.config[['vx', 'vy', 'vz']])
+            self.accelerations = np.zeros((self.N, 2))
+        else:
+            self.m = np.random.uniform(0, 10, (self.N, 1))
+            self.positions = np.random.uniform(-100, 100, (self.N, 3))
+            self.velocities = np.random.uniform(-1, 1, (self.N, 3))
+            self.accelerations = np.zeros((self.N, 2))
 
     def step(self, dt):
         pass
@@ -42,7 +56,7 @@ class Environment:
                 # Newton's law of Gravitation
                 relative_position = positions[j] - positions[i]
                 l2_norm = np.linalg.norm(relative_position) + 1e-6
-                gravitational_force_ij = self.settings["const"]["G"]*self.m[i]*self.m[j]*relative_position/l2_norm**3 
+                gravitational_force_ij = self.G*self.m[i]*self.m[j]*relative_position/l2_norm**3 
 
                 # Fji = -Fij <=> Fij = -Fji
                 force_between_bodies[i, j] = gravitational_force_ij

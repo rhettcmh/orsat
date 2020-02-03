@@ -1,22 +1,26 @@
-""" Main entry point for ORSAT """
-
 import argparse
 import errno
 import os
 
-import environment
+import pandas as pd
+
+import environment as env
 import gui
 import toml
 
 SETTINGS_FILE = "configuration/settings.toml"
 
-def enter_mode(**kwargs):
+def enter_mode(config, train):
     """ Runs ORSAT in the desired mode. """
-    pass
+    if config is not None:
+        vis = gui.GUI(env.Environment(config[0], config[1]), toml.load(SETTINGS_FILE))
+        vis.animate()
+    return
 
 def is_valid_configuration(config_id):
     """ Checks whether the provided config ID is valid,
-    and if so, whether the file exists. """
+    and if so, whether the file exists and if so,
+    load the csv file. """
     settings = toml.load(SETTINGS_FILE)
     if config_id in settings["configs"]:
         if not os.path.isfile("configuration/" + settings["configs"][config_id]["file"]):
@@ -24,26 +28,22 @@ def is_valid_configuration(config_id):
                 os.strerror(errno.ENOENT), settings["configs"][config_id]["file"])
     else:
         raise KeyError(f"{config_id} is not a valid key in {SETTINGS_FILE}")
-    return config_id
-
-def view(config):
-    """ Initializes and runs the GUI with a single 
-    instance of ORSAT """
-    if config is None:
-        gui.GUI().run()
-        # random start
-        pass
-    else:
-        # start with the ID'd config
-        pass
+    config = pd.read_csv("configuration/" + settings["configs"][config_id]["file"])
+    return config, config_id
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", help="Specify an initial configuration \
+    parser.add_argument("--config", 
+        help="Specify an initial configuration \
         of ORSAT, where [CONFIG] is the ID of the configuration defined in \
         'settings.toml'. If not specified, then a random configuration is \
-        generated.", type=is_valid_configuration, required=False) 
+        generated.", 
+        type=is_valid_configuration, 
+        required=False
+    ) 
+    parser.add_argument("--train", 
+        help="Runs ORSAT in a headless mode for training machine learning algorithms.",
+        action='store_true'
+    )
     args = parser.parse_args()  
-    # enter_mode(**vars(args))
-    vis = gui.GUI(environment.Environment(), toml.load(SETTINGS_FILE))
-    vis.animate()
+    enter_mode(**vars(args))
