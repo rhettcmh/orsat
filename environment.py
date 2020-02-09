@@ -20,7 +20,7 @@ class Environment:
             self.G = self.settings['configs'][self.config_id]['G']
         else:
             self.N = self.settings['environment']['n']
-            self.G = self.settings['environment']['G']
+            self.G = self.settings['const']['G']
 
         # Placeholders
         self.names = np.empty(self.N)
@@ -38,7 +38,7 @@ class Environment:
             self.velocities = np.array(self.config[['vx', 'vy', 'vz']])
             self.accelerations = np.zeros((self.N, 2))
         else:
-            self.m = np.random.uniform(0, 10, (self.N, 1))
+            self.m = np.random.uniform(0, 2, (self.N, 1))
             self.positions = np.random.uniform(-100, 100, (self.N, 3))
             self.velocities = np.random.uniform(-1, 1, (self.N, 3))
             self.accelerations = np.zeros((self.N, 2))

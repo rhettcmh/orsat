@@ -5,22 +5,26 @@ import os
 import pandas as pd
 
 import environment as env
-import gui
+from gui import GUI
 import toml
 
 SETTINGS_FILE = "configuration/settings.toml"
 
-def enter_mode(config, train):
+def enter_mode(config, train, view):
     """ Runs ORSAT in the desired mode. """
-    if config is not None:
-        vis = gui.GUI(env.Environment(config[0], config[1]), toml.load(SETTINGS_FILE))
+    if view:
+        vis = GUI(env.Environment(), toml.load(SETTINGS_FILE))
         vis.animate()
     return
 
 def is_valid_configuration(config_id):
     """ Checks whether the provided config ID is valid,
     and if so, whether the file exists and if so,
-    load the csv file. """
+    load the csv file. 
+
+    :param config_id: ID relating to a particular
+        initial configuration.
+    """
     settings = toml.load(SETTINGS_FILE)
     if config_id in settings["configs"]:
         if not os.path.isfile("configuration/" + settings["configs"][config_id]["file"]):
@@ -37,12 +41,16 @@ if __name__ == "__main__":
         help="Specify an initial configuration \
         of ORSAT, where [CONFIG] is the ID of the configuration defined in \
         'settings.toml'. If not specified, then a random configuration is \
-        generated.", 
+        used.", 
         type=is_valid_configuration, 
         required=False
     ) 
     parser.add_argument("--train", 
-        help="Runs ORSAT in a headless mode for training machine learning algorithms.",
+        help="Runs ORSAT in a \"headless mode\" for training machine learning algorithms.",
+        action='store_true'
+    )
+    parser.add_argument("--view",
+        help="If flag used, runs the ORSAT GUI visualization of a single episode.",
         action='store_true'
     )
     args = parser.parse_args()  
