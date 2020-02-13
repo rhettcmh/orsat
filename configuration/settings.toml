@@ -1,17 +1,20 @@
 [environment]
 n = 7 # number of bodies in the simulation
 dt = 0.1 # s
-t_max = 100.0 # s
+t_max = 100000000.0 # s
 method = "HPC"
 
 [const]
 G = 10 # Universal gravitation constant use for random init
+max_trail = 100 # seconds
 
 [HPC]
+# Huen's predictor-correction numerical integration
 epsilon = 1e-11 # tolerance for the error.
 max_steps = 100 # maximum number of allowed iterations before ceasing.
 
 [RK]
+# Runge-Kutta numerical integration
     order = 4
     # Runge-Kutta Numerical Integration constants
     # In the Orbital Simulator, A is included, yet not used.
@@ -45,11 +48,6 @@ max_steps = 100 # maximum number of allowed iterations before ceasing.
     # Description:
     file = "config2.csv"
     G = 24.0
-
-    [configs.mep]
-    # Description:
-    file = "blepmep.csv"
-    G = 45.0
 
 [gravtails]
 # Gravtails default settings. Overriden when using GUI.

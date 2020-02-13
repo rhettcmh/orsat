@@ -1,19 +1,25 @@
-import xml.etree.ElementTree as ET
-
 import numpy as np
-
-import matplotlib.pyplot as plt
 import toml
-from mpl_toolkits import mplot3d
-
 
 class Environment:
+    """ Environment contains all the necessary
+    utilities to move the point mass bodies and 
+    calculate the gravitation interactions between each body.
+    """
     def __init__(self, config=None, config_id=None,
             settings_file="configuration/settings.toml"):
+        """ Setup the environment.
+
+        :param config: is a preset configuration defined? (T/F)
+        :param confid_id: the ID of the particular initial 
+            configuraiton defined in the settings.
+        :param settings_file: path of the settings to load.
+        """
         self.config = config
         self.config_id = config_id
         self.settings = toml.load(settings_file)
         self.dt = self.settings["environment"]["dt"]
+        self.gt = 0
 
         if self.config is not None:
             self.N = self.config.shape[0]
@@ -42,9 +48,16 @@ class Environment:
             self.positions = np.random.uniform(-100, 100, (self.N, 3))
             self.velocities = np.random.uniform(-1, 1, (self.N, 3))
             self.accelerations = np.zeros((self.N, 2))
+        self.gt = 0
 
-    def step(self, dt):
-        pass
+    def step(self):
+        """ Update the environment a single timestep dt each call """
+        if self.gt < self.settings["environment"]["t_max"]:
+            if self.settings["environment"]["method"] == "HPC":
+                self.huen_predictor_corrector()  
+            elif self.settings["environment"]["method"] == "RK":
+                self.runge_kutta()
+            self.gt += self.dt
 
     def calculate_gravity_laws(self, positions):
         """ Calculates the net acceleration (ax, ay, az) due to 
@@ -139,32 +152,18 @@ class Environment:
         :param collision_distance: Euclidan distance which classifies
             as a successful "collision".
         """
-        bodies = np.repeat(self.positions[:, np.newaxis, :], self.N, axis=1)  
-        other_bodies = np.repeat(self.positions[np.newaxis], self.N, axis=0)
-        euclidean_distances_w = np.linalg.norm(bodies - other_bodies, axis=2)
-        # euclidean_distances = euclidean_distances_w[np.nonzero(euclidean_distances_w)].reshape(-1,self.N-1)
-            # min_vals = np.amin(euclidean_distances, axis=1)
-        collidedMask = euclidean_distances_w < collision_distance
-        nonZeroMask = euclidean_distances_w != 0
-        hasCollidedMask = np.logical_and(collidedMask, nonZeroMask)
-        collided_body1 = np.where(hasCollidedMask)
-        arr = np.transpose(np.vstack((collided_body1[0], collided_body1[1])))
-        arr = np.unique(arr)
+        # bodies = np.repeat(self.positions[:, np.newaxis, :], self.N, axis=1)  
+        # other_bodies = np.repeat(self.positions[np.newaxis], self.N, axis=0)
+        # euclidean_distances_w = np.linalg.norm(bodies - other_bodies, axis=2)
+        # # euclidean_distances = euclidean_distances_w[np.nonzero(euclidean_distances_w)].reshape(-1,self.N-1)
+        #     # min_vals = np.amin(euclidean_distances, axis=1)
+        # collidedMask = euclidean_distances_w < collision_distance
+        # nonZeroMask = euclidean_distances_w != 0
+        # hasCollidedMask = np.logical_and(collidedMask, nonZeroMask)
+        # collided_body1 = np.where(hasCollidedMask)
+        # arr = np.transpose(np.vstack((collided_body1[0], collided_body1[1])))
+        # arr = np.unique(arr)
 
         # If you do collide, make sure that you are picking the one which was closest... (interesting problem...)
-        import pdb; pdb.set_trace()
-
-if __name__ == "__main__":
-    env = Environment()
-    env._reset()
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-
-    # Temporary plotting
-    for i in range(1000):
-        env.runge_kutta()
-        # env.huen_predictor_corrector()        
-        res = ax.scatter3D(env.positions[:,0], env.positions[:,1], env.positions[:,2], c='r')
-        plt.pause(0.1)
-        res.set_alpha(0.1)
-        res.set_linewidth(0)
+        # import pdb; pdb.set_trace()
+        pass

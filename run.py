@@ -1,12 +1,11 @@
 import argparse
 import errno
 import os
-
 import pandas as pd
+import toml
 
 import environment as env
 from gui import GUI
-import toml
 
 SETTINGS_FILE = "configuration/settings.toml"
 
