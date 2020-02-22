@@ -6,7 +6,9 @@ ORSAT or the **OR**bital **S**imul**AT**or is a 3D simulation of an N-body inter
 
 > python3 run.py --view
 
-This will run a random configuration of the N bodies defined in "settings.toml". Use the --view flag anytime you wish to see the program running live.
+This will run a random configuration of the N bodies defined in "settings.toml". Use the --view flag anytime you wish to see the program running live, a little like this...
+
+<img src="ORSATv0_1.gif">
 
 ### What's the big slider for?
 

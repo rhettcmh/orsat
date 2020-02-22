@@ -1,8 +1,8 @@
 [environment]
-n = 7 # number of bodies in the simulation
+n = 15 # number of bodies in the simulation
 dt = 0.1 # s
 t_max = 100000000.0 # s
-method = "HPC"
+method = "RK"
 
 [const]
 G = 10 # Universal gravitation constant use for random init
@@ -49,6 +49,10 @@ max_steps = 100 # maximum number of allowed iterations before ceasing.
     file = "config2.csv"
     G = 24.0
 
+    [configs.sshot]
+    file = "slingshot.csv"
+    G = 20.0
+    
 [gravtails]
 # Gravtails default settings. Overriden when using GUI.
 max_length = 20 # s
