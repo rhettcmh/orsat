@@ -1,0 +1,6 @@
+numpy==1.18.1
+toml==0.10.0
+pyqtgraph==0.10.0
+PyQt5==5.14.1
+pandas==1.0.1
+PyOpenGL==3.1.5
