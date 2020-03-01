@@ -12,7 +12,7 @@ SETTINGS_FILE = "configuration/settings.toml"
 def enter_mode(config, train, view):
     """ Runs ORSAT in the desired mode. """
     if view:
-        vis = GUI(env.Environment(), toml.load(SETTINGS_FILE))
+        vis = GUI(Environment.from_config(), toml.load(SETTINGS_FILE))
         vis.animate()
     return
 
