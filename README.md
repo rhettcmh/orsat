@@ -2,11 +2,15 @@
 
 ## What is ORSAT and How do I see it?
 
-ORSAT or the **OR**bital **S**imul**AT**or is a 3D simulation of an N-body interaction due to gravity. To run ORSAT clone down the repository and execute
+ORSAT or the **OR**bital **S**imul**AT**or is a 3D simulation of an N-body interaction due to gravity. To run ORSAT clone down the repository and install the dependencies with:
+
+> pip install -r requirements.txt
+
+To view a randomly initialized environment, execute:
 
 > python3 run.py --view
 
-This will run a random configuration of the N bodies defined in "settings.toml". Use the --view flag anytime you wish to see the program running live, a little like this...
+You should see the program running live, a little like this...
 
 <img src="ORSATv0_1.gif">
 

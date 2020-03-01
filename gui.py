@@ -5,7 +5,6 @@ from PyQt5.QtCore import Qt
 from pyqtgraph.Qt import QtCore, QtGui
 import sys
 
-import environment as env
 from gravtails import GravTails
 
 class GUI(QtGui.QWidget):

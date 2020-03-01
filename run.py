@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import toml
 
-import environment as env
+from environment import *
 from gui import GUI
 
 SETTINGS_FILE = "configuration/settings.toml"
